@@ -3,20 +3,31 @@ name: Network Infrastructure
 on:
   workflow_dispatch:
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
-  deploy:
-    uses: Housing-Intelligence/hi-platform-cicd/.github/workflows/terraform-apply.yml@main
+  trigger-platform-cicd:
+    runs-on: ubuntu-latest
 
-    with:
-      target_repository: Housing-Intelligence/hi-network-infra
-      terraform_directory: terraform/environments
-      aws_region: us-east-2
-      environment: dev
-      vpc_cidr: 10.0.0.0/16
+    permissions:
+      contents: read
 
-    secrets:
-      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+    steps:
+      - name: Trigger platform CI/CD
+        env:
+          GH_TOKEN: ${{ secrets.CICD_TRIGGER_TOKEN }}
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            https://api.github.com/repos/Housing-Intelligence/hi-platform-cicd/actions/workflows/terraform-apply.yml/dispatches \
+            -d '{
+              "ref": "main",
+              "inputs": {
+                "target_repository": "Housing-Intelligence/hi-network-infra",
+                "terraform_directory": "terraform/environments",
+                "aws_region": "us-east-2",
+                "environment": "dev",
+                "vpc_cidr": "10.0.0.0/16"
+              }
+            }'
