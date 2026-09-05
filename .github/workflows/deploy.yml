@@ -28,6 +28,7 @@ jobs:
                 "terraform_directory": "terraform/environments",
                 "aws_region": "us-east-2",
                 "environment": "dev",
-                "vpc_cidr": "10.0.0.0/16"
+                "infra_name": "network",
+                "parameters_json": "{\"vpc_cidr\":\"10.0.0.0/16\"}"
               }
             }'
