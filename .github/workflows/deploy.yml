@@ -2,6 +2,22 @@ name: Network Infrastructure
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+
+      action:
+        description: "Terraform action to perform, e.g. apply or destroy"
+        required: true
+        type: choice
+        options:
+          - apply
+          - destroy
 
 jobs:
   trigger-platform-cicd:
