@@ -11,7 +11,7 @@ on:
           - dev
           - prod
 
-      action:
+      operation:
         description: "Terraform action to perform, e.g. apply or destroy"
         required: true
         type: choice
@@ -42,8 +42,8 @@ jobs:
               "inputs": {
                 "target_repository": "Housing-Intelligence/hi-network-infra",
                 "terraform_directory": "terraform/environments",
-                "aws_region": "us-east-2",
-                "environment": "dev",
-                "parameters_json": "{\"vpc_cidr\":\"10.0.0.0/16\"}"
+                "environment": "${{ inputs.environment }}",
+                "operation": "${{ inputs.operation }}"
+                "parameters_json": "{\"vpc_cidr\":\"10.0.0.0/16\"}",
               }
             }'
